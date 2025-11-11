@@ -1,7 +1,11 @@
 package com.jonassavas.spring_library_database.dao;
 
+import java.util.Optional;
+
 import com.jonassavas.spring_library_database.domain.Author;
 
 public interface AuthorDao {
     void create(Author author);
+
+    Optional<Author> findOne(long l);
 }
