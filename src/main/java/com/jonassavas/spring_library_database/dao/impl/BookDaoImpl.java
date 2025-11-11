@@ -7,10 +7,12 @@ import java.util.Optional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import com.jonassavas.spring_library_database.dao.BookDao;
 import com.jonassavas.spring_library_database.domain.Book;
 
+@Component
 public class BookDaoImpl implements BookDao {
     
     private final JdbcTemplate jdbcTemplate;
@@ -29,7 +31,7 @@ public class BookDaoImpl implements BookDao {
     @Override
     public Optional<Book> find(String isbn){
         List<Book> results = jdbcTemplate.query(
-            "SELECT isbn FROM books WHERE isbn = ? LIMIT 1",
+            "SELECT isbn, title, author_id FROM books WHERE isbn = ? LIMIT 1",
             new BookRowMapper(),
             isbn);
 

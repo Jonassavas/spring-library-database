@@ -1,4 +1,4 @@
-package com.jonassavas.spring_library_database.dao;
+package com.jonassavas.spring_library_database.dao.impl;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.jonassavas.spring_library_database.TestDataUtil;
 import com.jonassavas.spring_library_database.dao.impl.AuthorDaoImpl;
 import com.jonassavas.spring_library_database.domain.Author;
 
@@ -25,11 +26,7 @@ public class AuthorDaoImplTests {
 
     @Test
     public void testThatCreateAuthorGeneratesCorrectSql(){
-        Author author = Author.builder()
-                        .id(1L)
-                        .name("Abigail Rose")
-                        .age(80)                
-                        .build();
+        Author author = TestDataUtil.createTestAuthor();
         underTest.create(author);
 
         verify(jdbcTemplate).update(

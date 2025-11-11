@@ -1,4 +1,4 @@
-package com.jonassavas.spring_library_database.dao;
+package com.jonassavas.spring_library_database.dao.impl;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -11,12 +11,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.jonassavas.spring_library_database.TestDataUtil;
 import com.jonassavas.spring_library_database.dao.impl.AuthorDaoImpl;
 import com.jonassavas.spring_library_database.dao.impl.BookDaoImpl;
 import com.jonassavas.spring_library_database.dao.impl.BookDaoImpl.BookRowMapper;
 import com.jonassavas.spring_library_database.domain.Book;
-
-import net.bytebuddy.asm.Advice.Argument;
 
 @ExtendWith(MockitoExtension.class)
 public class BookDaoImplTests {
@@ -29,11 +28,7 @@ public class BookDaoImplTests {
 
     @Test 
     public void testThatCreateBookGeneratesCorrectSql(){
-        Book book = Book.builder()
-                    .isbn("978-1-2345-6789-0")
-                    .title("The Shadow in the Attic")
-                    .authorId(1L)
-                    .build();
+        Book book = TestDataUtil.createTestBook();
 
         underTest.create(book);
 
