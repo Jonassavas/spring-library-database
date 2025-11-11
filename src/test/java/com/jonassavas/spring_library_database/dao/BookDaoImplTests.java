@@ -13,7 +13,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.jonassavas.spring_library_database.dao.impl.AuthorDaoImpl;
 import com.jonassavas.spring_library_database.dao.impl.BookDaoImpl;
+import com.jonassavas.spring_library_database.dao.impl.BookDaoImpl.BookRowMapper;
 import com.jonassavas.spring_library_database.domain.Book;
+
+import net.bytebuddy.asm.Advice.Argument;
 
 @ExtendWith(MockitoExtension.class)
 public class BookDaoImplTests {
@@ -24,7 +27,8 @@ public class BookDaoImplTests {
     @InjectMocks
     private BookDaoImpl underTest;
 
-    @Test void testThatCreateBookGeneratesCorrectSql(){
+    @Test 
+    public void testThatCreateBookGeneratesCorrectSql(){
         Book book = Book.builder()
                     .isbn("978-1-2345-6789-0")
                     .title("The Shadow in the Attic")
@@ -41,4 +45,13 @@ public class BookDaoImplTests {
         );
     }
     
+    @Test
+    public void testThatFindOneBookGeneratesCorrectSql(){
+        underTest.find("978-1-2345-6789-0");
+        verify(jdbcTemplate).query(
+                                eq("SELECT isbn FROM books WHERE isbn = ? LIMIT 1"),
+                                ArgumentMatchers.<BookDaoImpl.BookRowMapper>any(),
+                                eq("978-1-2345-6789-0")
+        );
+    }
 }
