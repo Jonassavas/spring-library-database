@@ -12,9 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.jonassavas.spring_library_database.TestDataUtil;
-import com.jonassavas.spring_library_database.dao.impl.AuthorDaoImpl;
-import com.jonassavas.spring_library_database.dao.impl.BookDaoImpl;
-import com.jonassavas.spring_library_database.dao.impl.BookDaoImpl.BookRowMapper;
 import com.jonassavas.spring_library_database.domain.Book;
 
 @ExtendWith(MockitoExtension.class)
@@ -67,6 +64,15 @@ public class BookDaoImplTests {
         verify(jdbcTemplate).update(
             "UPDATE books SET isbn = ?, title = ?, author_id = ? WHERE isbn = ?",
             "978-1-2345-6789-0", "The Shadow in the Attic", 1L, "978-1-2345-6789-0"
+        );
+    }
+
+    @Test
+    public void testThatBookDeleteGeneratesCorrectSql(){
+        underTest.delete("978-1-2345-6789-0");
+        verify(jdbcTemplate).update(
+            "DELETE FROM books WHERE isbn = ?", 
+            "978-1-2345-6789-0"
         );
     }
 }
