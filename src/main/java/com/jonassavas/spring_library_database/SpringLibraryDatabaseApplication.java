@@ -11,22 +11,22 @@ import lombok.extern.java.Log;
 
 @SpringBootApplication
 @Log
-public class SpringLibraryDatabaseApplication implements CommandLineRunner {
+public class SpringLibraryDatabaseApplication {
 
-	private final DataSource dataSource;
+	//private final DataSource dataSource;
 
-	public SpringLibraryDatabaseApplication(final DataSource dataSource){this.dataSource = dataSource;}
+	//public SpringLibraryDatabaseApplication(final DataSource dataSource){this.dataSource = dataSource;}
 
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringLibraryDatabaseApplication.class, args);
 	}
 
-	@Override
-	public void run(final String... args){
-		log.info("Datasource: " + dataSource.toString());
-		final JdbcTemplate restTemplate = new JdbcTemplate(dataSource);
-		restTemplate.execute("select 1");
-	}
+	// @Override
+	// public void run(final String... args){
+	// 	log.info("Datasource: " + dataSource.toString());
+	// 	final JdbcTemplate restTemplate = new JdbcTemplate(dataSource);
+	// 	restTemplate.execute("select 1");
+	// }
 
 }
