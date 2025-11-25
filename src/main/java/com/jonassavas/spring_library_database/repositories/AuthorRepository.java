@@ -7,5 +7,5 @@ import com.jonassavas.spring_library_database.domain.Author;
 
 @Repository // Similar to component, it describes it as a repository
 public interface AuthorRepository extends CrudRepository<Author, Long>{
-    
+    Iterable<Author> ageLessThan(int i);
 }
