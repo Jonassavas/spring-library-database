@@ -1,4 +1,4 @@
-package com.jonassavas.spring_library_database.domain;
+package com.jonassavas.spring_library_database.domain.entities;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "books")
-public class Book {
+public class BookEntity {
     
     @Id
     private String isbn;
@@ -26,5 +26,5 @@ public class Book {
 
     @ManyToOne(cascade = CascadeType.ALL) // If we get the book back, we also retrieve the author
     @JoinColumn(name = "author_id")
-    private Author author;
+    private AuthorEntity author;
 }
