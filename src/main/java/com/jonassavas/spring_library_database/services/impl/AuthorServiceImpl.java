@@ -1,5 +1,9 @@
 package com.jonassavas.spring_library_database.services.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.springframework.stereotype.Service;
 
 import com.jonassavas.spring_library_database.domain.entities.AuthorEntity;
@@ -18,5 +22,14 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public AuthorEntity createAuthor(AuthorEntity authorEntity){
         return authorRepository.save(authorEntity);
+    }
+
+    @Override
+    public List<AuthorEntity> findAll(){
+        return StreamSupport.stream(authorRepository
+                            .findAll()
+                            .spliterator(),
+                            false)
+                .collect(Collectors.toList());
     }
 }

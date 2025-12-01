@@ -1,5 +1,8 @@
 package com.jonassavas.spring_library_database.controllers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +13,9 @@ import com.jonassavas.spring_library_database.domain.dto.AuthorDto;
 import com.jonassavas.spring_library_database.domain.entities.AuthorEntity;
 import com.jonassavas.spring_library_database.mappers.Mapper;
 import com.jonassavas.spring_library_database.services.AuthorService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 public class AuthorController {
@@ -29,4 +35,13 @@ public class AuthorController {
         AuthorEntity savedAuthorEntity = authorService.createAuthor(authorEntity);
         return new ResponseEntity<>(authorMapper.mapTo(savedAuthorEntity), HttpStatus.CREATED);
     }
+
+    @GetMapping(path = "/authors")
+    public List<AuthorDto> listAuthors() {
+        List<AuthorEntity> authors = authorService.findAll();
+        return authors.stream()
+            .map(authorMapper::mapTo)
+            .collect(Collectors.toList());
+    }
+    
 }

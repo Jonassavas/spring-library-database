@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jonassavas.spring_library_database.TestDataUtil;
 import com.jonassavas.spring_library_database.domain.entities.AuthorEntity;
+import com.jonassavas.spring_library_database.services.AuthorService;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -25,19 +26,21 @@ import lombok.experimental.ExtensionMethod;
 @AutoConfigureMockMvc
 public class AuthorControllerIntegrationTests {
     
+    private AuthorService authorService;
     private MockMvc mockMvc;
 
     private ObjectMapper objectMapper;
 
     @Autowired
-    public AuthorControllerIntegrationTests(MockMvc mockMvc){
+    public AuthorControllerIntegrationTests(MockMvc mockMvc, AuthorService authorService){
         this.mockMvc = mockMvc;
         this.objectMapper = new ObjectMapper();
+        this.authorService = authorService;
     }
 
     @Test
     public void testThatCreateAuthorReturnsHttp201Create() throws Exception{
-        AuthorEntity testAuthorA = TestDataUtil.createTestAuthorA();
+        AuthorEntity testAuthorA = TestDataUtil.createTestAuthorEntityA();
         testAuthorA.setId(null);
         String authorJson = objectMapper.writeValueAsString(testAuthorA);
 
@@ -53,7 +56,7 @@ public class AuthorControllerIntegrationTests {
 
     @Test
     public void testThatCreateAuthorReturnsSavedAuthor() throws Exception{
-        AuthorEntity testAuthorA = TestDataUtil.createTestAuthorA();
+        AuthorEntity testAuthorA = TestDataUtil.createTestAuthorEntityA();
         testAuthorA.setId(null);
         String authorJson = objectMapper.writeValueAsString(testAuthorA);
 
@@ -68,6 +71,33 @@ public class AuthorControllerIntegrationTests {
             MockMvcResultMatchers.jsonPath("$.name").value("Abigail Rose")
         ).andExpect(
             MockMvcResultMatchers.jsonPath("$.age").value(80)
+        );
+    }
+
+    @Test
+    public void testThatListAuthorsReturnsHttpStatus200() throws Exception{
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/authors")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+            MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatListAuthorsReturnsListOfAuthors() throws Exception{
+        AuthorEntity testAuthorEntityA = TestDataUtil.createTestAuthorEntityA();
+        authorService.createAuthor(testAuthorEntityA);
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/authors")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$[0].id").isNumber()
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$[0].name").value("Abigail Rose")
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$[0].age").value(80)
         );
     }
 }
