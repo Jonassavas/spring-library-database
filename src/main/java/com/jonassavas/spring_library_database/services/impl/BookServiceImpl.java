@@ -1,5 +1,9 @@
 package com.jonassavas.spring_library_database.services.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.springframework.stereotype.Service;
 
 import com.jonassavas.spring_library_database.domain.entities.BookEntity;
@@ -21,4 +25,12 @@ public class BookServiceImpl implements BookService{
         return bookRepository.save(book);
     }
 
+    @Override
+    public List<BookEntity> findAll(){
+        return StreamSupport
+                .stream(
+                    bookRepository.findAll().spliterator(), 
+                    false)
+                .collect(Collectors.toList());
+    }
 }

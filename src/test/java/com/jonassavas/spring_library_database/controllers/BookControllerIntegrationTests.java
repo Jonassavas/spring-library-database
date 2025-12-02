@@ -17,6 +17,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jonassavas.spring_library_database.TestDataUtil;
 import com.jonassavas.spring_library_database.domain.dto.BookDto;
 import com.jonassavas.spring_library_database.domain.entities.AuthorEntity;
+import com.jonassavas.spring_library_database.domain.entities.BookEntity;
+import com.jonassavas.spring_library_database.services.BookService;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -27,11 +29,13 @@ import lombok.experimental.ExtensionMethod;
 public class BookControllerIntegrationTests {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
+    private BookService bookService;
 
     @Autowired
-    public BookControllerIntegrationTests(MockMvc mockMvc, ObjectMapper objectMapper){
+    public BookControllerIntegrationTests(MockMvc mockMvc, ObjectMapper objectMapper, BookService bookService){
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
+        this.bookService = bookService;
     }
 
     @Test
@@ -64,4 +68,28 @@ public class BookControllerIntegrationTests {
         );
     }
 
+    @Test
+    public void testThatListBooksREturnsHttpStatus200Ok() throws Exception{
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/books")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+            MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatListBooksReturnsBook() throws Exception{
+        BookEntity testBookEntityA = TestDataUtil.createTestBookEntityA(null);
+        bookService.createBook(testBookEntityA.getIsbn(), testBookEntityA);
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/books")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$[0].isbn").value("978-1-2345-6789-0")
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$[0].title").value("The Shadow in the Attic")
+        );
+    }
 }
